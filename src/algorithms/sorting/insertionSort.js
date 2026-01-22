@@ -9,8 +9,8 @@ export const insertionSort = async (array, setArray, speed) => {
   setArray([...arr]);
 
   for (let i = 1; i < n; i++) {
-    let key = arr[i];
-    key.state = 'compare';
+    let key = { ...arr[i] }; // Clone object to avoid reference issues
+    arr[i] = { ...arr[i], state: 'compare' }; // Visual update on a copy
     setArray([...arr]);
     await sleep(delay);
 
@@ -20,14 +20,13 @@ export const insertionSort = async (array, setArray, speed) => {
       setArray([...arr]);
       await sleep(delay);
       
-      arr[j + 1] = arr[j];
+      arr[j + 1] = { ...arr[j] }; // Clone shifted element
       arr[j].state = 'sorted';
       j--;
       setArray([...arr]);
     }
 
-    arr[j + 1] = key;
-    arr[j + 1].state = 'sorted';
+    arr[j + 1] = { ...key, state: 'sorted' }; // Restore key as a new copy
     setArray([...arr]);
     await sleep(delay);
   }

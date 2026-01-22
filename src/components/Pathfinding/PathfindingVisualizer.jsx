@@ -3,6 +3,7 @@ import Node from './Node/Node';
 import { dijkstra, getNodesInShortestPathOrder } from '../../algorithms/pathfinding/dijkstra';
 import { astar, getNodesInShortestPathOrder as astarPath } from '../../algorithms/pathfinding/astar';
 import { dfs, getNodesInShortestPathOrder as dfsPath } from '../../algorithms/pathfinding/dfs';
+import { bfs, getNodesInShortestPathOrder as bfsPath } from '../../algorithms/pathfinding/bfs';
 import { recursiveDivisionMaze } from '../../algorithms/pathfinding/mazeGenerator';
 import './PathfindingVisualizer.css';
 
@@ -97,6 +98,10 @@ export default class PathfindingVisualizer extends Component {
         visitedNodesInOrder = astar(grid, startNode, finishNode);
         nodesInShortestPathOrder = astarPath(finishNode);
         break;
+      case 'bfs':
+        visitedNodesInOrder = bfs(grid, startNode, finishNode);
+        nodesInShortestPathOrder = bfsPath(finishNode);
+        break;
       case 'dfs':
         visitedNodesInOrder = dfs(grid, startNode, finishNode);
         nodesInShortestPathOrder = dfsPath(finishNode);
@@ -178,7 +183,8 @@ export default class PathfindingVisualizer extends Component {
               >
                 <option value="dijkstra">Dijkstra</option>
                 <option value="astar">A* (A-Star)</option>
-                <option value="dfs">DFS</option>
+                <option value="bfs">Breadth First Search</option>
+                <option value="dfs">Depth First Search</option>
               </select>
             </label>
           </div>

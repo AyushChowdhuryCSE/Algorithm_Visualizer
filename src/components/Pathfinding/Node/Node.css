@@ -25,7 +25,7 @@
 }
 
 .node-wall {
-  background-color: var(--color-surface);
+  background-color: #cbd5e1; /* slate-300: much lighter than bg */
   border: none;
   animation: wallAnimation 0.2s ease-out forwards;
 }
@@ -42,9 +42,15 @@
 }
 
 @keyframes wallAnimation {
-  0% { transform: scale(0.3); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1.0); }
+  0% {
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes visitedAnimation {
@@ -57,7 +63,7 @@
     background-color: rgba(17, 104, 217, 0.75);
   }
   100% {
-    transform: scale(1.0);
+    transform: scale(1);
     background-color: rgba(0, 190, 218, 0.75);
   }
 }
@@ -83,7 +89,7 @@
     background-color: rgb(255, 254, 106);
   }
   100% {
-    transform: scale(1.0);
+    transform: scale(1);
     background-color: rgb(255, 254, 106);
   }
 }

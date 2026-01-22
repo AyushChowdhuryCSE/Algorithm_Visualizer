@@ -87,7 +87,7 @@ const SortingVisualizer = () => {
       <div className="array-container">
         {array.map((bar, idx) => (
           <div
-            key={bar.id}
+            key={idx}
             className={`array-bar ${bar.state}`}
             style={{
               height: `${(bar.value / 500) * 80}%`,
