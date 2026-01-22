@@ -1,41 +1,125 @@
 .pathfinding-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 20px;
 }
 
 .controls-bar {
-    margin: 20px 0;
-    display: flex;
-    gap: 20px;
-    align-items: center;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--glass-bg);
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
 }
 
 .grid {
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(30, 41, 59, 0.5);
-    border: 1px solid var(--glass-border);
-    padding: 10px;
-    border-radius: 8px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(30, 41, 59, 0.5);
+  border: 1px solid var(--glass-border);
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .grid-row {
-    display: flex;
+  display: flex;
 }
 
 .legend {
-    display: flex;
-    gap: 15px;
-    color: var(--color-text);
-    font-size: 0.9rem;
-    align-items: center;
+  display: flex;
+  gap: 15px;
+  color: var(--color-text);
+  font-size: 0.85rem;
+  align-items: center;
+  padding-left: 16px;
+  border-left: 1px solid var(--glass-border);
 }
 
 .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.algo-select-group {
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--glass-border);
+  padding-right: 16px;
+}
+
+.algo-select-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.algo-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+.algo-select:focus {
+  outline: none;
+  border-color: var(--color-turquoise);
+}
+
+.algo-select option {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.buttons-group {
+  display: flex;
+  gap: 12px;
+}
+
+.control-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.control-btn.primary {
+  background: var(--color-turquoise);
+  color: #0f172a;
+}
+.control-btn.primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(45, 212, 191, 0.3);
+}
+
+.control-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+.control-btn.secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }

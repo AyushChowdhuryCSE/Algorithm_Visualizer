@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import Node from './Node/Node';
 import { dijkstra, getNodesInShortestPathOrder } from '../../algorithms/pathfinding/dijkstra';
+import { astar, getNodesInShortestPathOrder as astarPath } from '../../algorithms/pathfinding/astar';
+import { dfs, getNodesInShortestPathOrder as dfsPath } from '../../algorithms/pathfinding/dfs';
+import { recursiveDivisionMaze } from '../../algorithms/pathfinding/mazeGenerator';
 import './PathfindingVisualizer.css';
 
 const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
+const START_NODE_COL = 5;
 const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+const FINISH_NODE_COL = 45;
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -14,6 +17,8 @@ export default class PathfindingVisualizer extends Component {
     this.state = {
       grid: [],
       mouseIsPressed: false,
+      algorithm: 'dijkstra',
+      isRunning: false,
     };
   }
 
@@ -23,12 +28,13 @@ export default class PathfindingVisualizer extends Component {
   }
 
   handleMouseDown(row, col) {
+    if (this.state.isRunning) return;
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid, mouseIsPressed: true });
   }
 
   handleMouseEnter(row, col) {
-    if (!this.state.mouseIsPressed) return;
+    if (!this.state.mouseIsPressed || this.state.isRunning) return;
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({ grid: newGrid });
   }
@@ -37,7 +43,7 @@ export default class PathfindingVisualizer extends Component {
     this.setState({ mouseIsPressed: false });
   }
 
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
@@ -48,7 +54,7 @@ export default class PathfindingVisualizer extends Component {
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
         if (!node.isStart && !node.isFinish) {
-            document.getElementById(`node-${node.row}-${node.col}`).className =
+          document.getElementById(`node-${node.row}-${node.col}`).className =
             'node node-visited';
         }
       }, 10 * i);
@@ -59,37 +65,151 @@ export default class PathfindingVisualizer extends Component {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
-         if (!node.isStart && !node.isFinish) {
-             document.getElementById(`node-${node.row}-${node.col}`).className =
+        if (!node.isStart && !node.isFinish) {
+          document.getElementById(`node-${node.row}-${node.col}`).className =
             'node node-shortest-path';
-         }
+        }
+        if (i === nodesInShortestPathOrder.length - 1) {
+          this.setState({ isRunning: false });
+        }
       }, 50 * i);
+    }
+    if (nodesInShortestPathOrder.length === 0) {
+      this.setState({ isRunning: false });
     }
   }
 
-  visualizeDijkstra() {
-    const { grid } = this.state;
+  visualize() {
+    const { grid, algorithm } = this.state;
+    this.setState({ isRunning: true });
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    
+    let visitedNodesInOrder;
+    let nodesInShortestPathOrder;
+    
+    switch (algorithm) {
+      case 'dijkstra':
+        visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        break;
+      case 'astar':
+        visitedNodesInOrder = astar(grid, startNode, finishNode);
+        nodesInShortestPathOrder = astarPath(finishNode);
+        break;
+      case 'dfs':
+        visitedNodesInOrder = dfs(grid, startNode, finishNode);
+        nodesInShortestPathOrder = dfsPath(finishNode);
+        break;
+      default:
+        visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    }
+    
+    this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
+
+  generateMaze() {
+    if (this.state.isRunning) return;
+    const grid = getInitialGrid();
+    this.setState({ grid }, () => {
+      const { grid } = this.state;
+      const startNode = grid[START_NODE_ROW][START_NODE_COL];
+      const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+      const walls = recursiveDivisionMaze(grid, startNode, finishNode);
+      this.animateWalls(walls);
+    });
+  }
+
+  animateWalls(walls) {
+    this.setState({ isRunning: true });
+    for (let i = 0; i < walls.length; i++) {
+      setTimeout(() => {
+        const [row, col] = walls[i];
+        const node = this.state.grid[row][col];
+        if (!node.isStart && !node.isFinish) {
+          const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+          this.setState({ grid: newGrid });
+        }
+        if (i === walls.length - 1) {
+          this.setState({ isRunning: false });
+        }
+      }, 10 * i);
+    }
+  }
+
+  clearGrid() {
+    if (this.state.isRunning) return;
+    const newGrid = getInitialGrid();
+    this.setState({ grid: newGrid });
+    // Also reset DOM classes for visited nodes
+    for (let row = 0; row < 20; row++) {
+      for (let col = 0; col < 50; col++) {
+        const nodeElement = document.getElementById(`node-${row}-${col}`);
+        if (nodeElement) {
+          const isStart = row === START_NODE_ROW && col === START_NODE_COL;
+          const isFinish = row === FINISH_NODE_ROW && col === FINISH_NODE_COL;
+          if (isStart) {
+            nodeElement.className = 'node node-start';
+          } else if (isFinish) {
+            nodeElement.className = 'node node-finish';
+          } else {
+            nodeElement.className = 'node';
+          }
+        }
+      }
+    }
   }
 
   render() {
-    const { grid, mouseIsPressed } = this.state;
+    const { grid, mouseIsPressed, algorithm, isRunning } = this.state;
 
     return (
       <div className="pathfinding-container">
         <div className="controls-bar">
-            <button className="control-btn primary" onClick={() => this.visualizeDijkstra()}>
-              Visualize Dijkstra
+          <div className="algo-select-group">
+            <label>
+              Algorithm
+              <select 
+                value={algorithm} 
+                onChange={(e) => this.setState({ algorithm: e.target.value })}
+                disabled={isRunning}
+                className="algo-select"
+              >
+                <option value="dijkstra">Dijkstra</option>
+                <option value="astar">A* (A-Star)</option>
+                <option value="dfs">DFS</option>
+              </select>
+            </label>
+          </div>
+          <div className="buttons-group">
+            <button 
+              className="control-btn primary" 
+              onClick={() => this.visualize()}
+              disabled={isRunning}
+            >
+              Visualize
             </button>
-            <div className="legend">
-               <span className="legend-item"><div className="node node-start"></div> Start</span>
-               <span className="legend-item"><div className="node node-finish"></div> Target</span>
-               <span className="legend-item"><div className="node node-wall"></div> Wall</span>
-            </div>
+            <button 
+              className="control-btn secondary" 
+              onClick={() => this.generateMaze()}
+              disabled={isRunning}
+            >
+              Generate Maze
+            </button>
+            <button 
+              className="control-btn secondary" 
+              onClick={() => this.clearGrid()}
+              disabled={isRunning}
+            >
+              Clear
+            </button>
+          </div>
+          <div className="legend">
+            <span className="legend-item"><div className="node node-start"></div> Start</span>
+            <span className="legend-item"><div className="node node-finish"></div> Target</span>
+            <span className="legend-item"><div className="node node-wall"></div> Wall</span>
+          </div>
         </div>
         <div className="grid">
           {grid.map((row, rowIdx) => {
@@ -143,12 +263,16 @@ const createNode = (col, row) => {
     isVisited: false,
     isWall: false,
     previousNode: null,
+    g: Infinity,
+    h: 0,
+    f: Infinity,
   };
 };
 
 const getNewGridWithWallToggled = (grid, row, col) => {
   const newGrid = grid.slice();
   const node = newGrid[row][col];
+  if (node.isStart || node.isFinish) return grid; // Don't toggle start/finish
   const newNode = {
     ...node,
     isWall: !node.isWall,
