@@ -5,7 +5,7 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB)
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=flat&logo=vite&logoColor=white)
 
-An interactive and dynamic web application designed to visualize complex sorting and pathfinding algorithms. This tool helps developers and students understand how these algorithms work under the hood through beautiful, step-by-step animations.
+An interactive and dynamic web application designed to visualize complex algorithms. This tool helps developers and students understand how these algorithms work under the hood through beautiful, step-by-step animations.
 
 ---
 
@@ -34,12 +34,21 @@ Explore how navigational algorithms find the shortest path:
 - **Depth-First Search (DFS)**: Exhaustive exploration.
 - **Maze Generation**: Automatic maze creation using Recursive Division.
 
+### 🧩 Backtracking Algorithms
+
+Watch how recursive algorithms step back to find solutions:
+
+- **N-Queens Problem**: Placing N chess queens on an N×N chessboard so that no two queens threaten each other.
+- **Sudoku Solver**: Solving classic 9x9 Sudoku puzzles using backtracking.
+
 ### 🛠️ Key Functionality
 
 - **Real-time Visualization**: Watch the algorithms process data step-by-step.
 - **Speed Control**: Adjust the execution speed to follow along comfortably.
-- **Array Size Control**: Change the dataset size to test performance.
-- **Interactive Grid**: Draw walls and obstacles for pathfinding.
+- **Interactive Controls**:
+  - **Sorting**: Adjust Array Size.
+  - **Pathfinding**: Draw walls and dragging start/end nodes.
+  - **Backtracking**: Generate puzzles and change board sizes.
 
 ---
 
@@ -93,11 +102,11 @@ Follow these instructions to set up the project locally on your machine.
 
 ## 📖 Usage
 
-1. **Select an Algorithm**: Choose from the dropdown menu (Sorting or Pathfinding).
+1. **Select a Category**: Choose from **Sorting**, **Pathfinding**, or **Backtracking** in the navigation bar.
 2. **Configure Settings**:
-   - Use the sliders to adjust **Speed** and **Array/Grid Size**.
-3. **Run**: Click the "Visualize" button to start the animation.
-4. **Reset**: Use the "Generate New Array" or "Clear Board" buttons to start over.
+   - Use the controls to adjust specific settings (e.g., Grid Size, Delay speed).
+3. **Run**: Click the "**Visualize**" or "**Solve**" button to start the animation.
+4. **Reset**: Use "Clear" or "New Puzzle" buttons to try again.
 
 ---
 
