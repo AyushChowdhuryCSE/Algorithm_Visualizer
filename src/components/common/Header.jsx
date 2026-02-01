@@ -22,6 +22,12 @@ const Header = ({ mode, setMode }) => {
         >
           Pathfinding
         </button>
+        <button 
+          className={`nav-btn ${mode === 'backtracking' ? 'active' : ''}`}
+          onClick={() => setMode('backtracking')}
+        >
+          Backtracking
+        </button>
       </nav>
 
       <div className="actions-section">

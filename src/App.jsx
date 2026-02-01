@@ -3,10 +3,11 @@ import { SettingsProvider } from './context/SettingsContext';
 import Header from './components/common/Header';
 import SortingVisualizer from './components/Sorting/SortingVisualizer';
 import PathfindingVisualizer from './components/Pathfinding/PathfindingVisualizer';
+import BacktrackingVisualizer from './components/Backtracking/BacktrackingVisualizer';
 import './index.css';
 
 function AppContent() {
-  const [mode, setMode] = useState('sorting'); // 'sorting' | 'pathfinding'
+  const [mode, setMode] = useState('sorting'); // 'sorting' | 'pathfinding' | 'backtracking'
 
   return (
     <div className="app-container">
@@ -15,8 +16,10 @@ function AppContent() {
       <main className="main-content">
         {mode === 'sorting' ? (
           <SortingVisualizer />
-        ) : (
+        ) : mode === 'pathfinding' ? (
           <PathfindingVisualizer />
+        ) : (
+          <BacktrackingVisualizer />
         )}
       </main>
     </div>
